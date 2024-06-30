@@ -27,7 +27,7 @@ jobs:
       - name: Install Dependencies
         run: npm ci
       - name: Pull Content
-        run: rm ./content && git clone https://github.com/ripdrive/ripdrive content
+        run: git clone https://github.com/ripdrive/ripdrive content
       - name: Build Quartz
         run: npx quartz build
       - name: Upload artifact
