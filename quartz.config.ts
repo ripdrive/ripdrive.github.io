@@ -9,6 +9,7 @@ import * as Plugin from "./quartz/plugins"
 const config: QuartzConfig = {
   configuration: {
     pageTitle: "The Rip Drive Project",
+    titleSuffix: " | The Rip Drive Project",
     enableSPA: true,
     enablePopovers: true,
     analytics: {
