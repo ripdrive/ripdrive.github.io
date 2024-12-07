@@ -45,10 +45,35 @@ const defaultOptions: SocialImageOptions = {
 }
 
 export default (() => {
-  const Head: QuartzComponent = ({ cfg, fileData, externalResources }: QuartzComponentProps) => {
-    const title =
-      (fileData.frontmatter?.title ?? i18n(cfg.locale).propertyDefaults.title) + cfg.titleSuffix
-    const description =
+  let fontsPromise: Promise<SatoriOptions["fonts"]>
+
+  let fullOptions: SocialImageOptions
+  const Head: QuartzComponent = ({
+    cfg,
+    fileData,
+    externalResources,
+    ctx,
+  }: QuartzComponentProps) => {
+    // Initialize options if not set
+    if (!fullOptions) {
+      if (typeof cfg.generateSocialImages !== "boolean") {
+        fullOptions = { ...defaultOptions, ...cfg.generateSocialImages }
+      } else {
+        fullOptions = defaultOptions
+      }
+    }
+
+    // Memoize google fonts
+    if (!fontsPromise && cfg.generateSocialImages) {
+      fontsPromise = getSatoriFont(cfg.theme.typography.header, cfg.theme.typography.body)
+    }
+
+    const slug = fileData.filePath
+    // since "/" is not a valid character in file names, replace with "-"
+    const fileName = slug?.replaceAll("/", "-")
+
+    // Get file description (priority: frontmatter > fileData > default)
+    const fdDescription =
       fileData.description?.trim() ?? i18n(cfg.locale).propertyDefaults.description
     const titleSuffix = cfg.pageTitleSuffix ?? ""
     const title =
